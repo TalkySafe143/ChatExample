@@ -5,9 +5,14 @@ const addMessageDB = msg => {
     myMessage.save();
 }
 
-const getMessagesDB = async () => {
-    const messages = await Model.find();
-    return messages;
+const getMessagesDB = () => {
+    return new Promise((resolve, reject) => {
+        Model.find()
+            .populate('user')
+            .exec((error, data) => {
+                error ? reject(error) : resolve(data);
+            });
+    })
 }
 
 const updateMessageDB = async (id, message) => {
@@ -15,14 +20,14 @@ const updateMessageDB = async (id, message) => {
     return response;
 }
 
-const findMessageDB = async queries => {
-    try {
-        const results = await Model.find(queries);
-        return results;
-    } catch(err) {
-        console.log(err);
-        return 'Unexpected Error'
-    }
+const findMessageDB = queries => {
+    return new Promise((resolve, reject) => {
+        Model.find(queries)
+        .populate('user')
+        .exec((err, data) => {
+            err ? reject(err) : resolve(data);
+        });
+    })
 }
 
 const deleteMessageDB = async id => {

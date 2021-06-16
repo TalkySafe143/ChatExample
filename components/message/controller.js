@@ -1,6 +1,6 @@
 const store = require('./store');
 
-const addMessage = (user, msg) => {
+const addMessage = (user, msg, chat, img) => {
     return new Promise((resolve, reject) => {
 
         if (!user || !msg) {
@@ -8,10 +8,16 @@ const addMessage = (user, msg) => {
             reject('Falta informacion en el mensaje');
         }
 
+        let fileURL = '' ;
+
+        if (img) fileURL = `http://localhost:3001/app/images/${img.filename}`;
+
         const fullMessage = {
+            chat,
             user,
             message: msg,
-            date: new Date()
+            date: new Date(),
+            file: fileURL
         }
         
         store.addMessageDB(fullMessage)

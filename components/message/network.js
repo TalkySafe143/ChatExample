@@ -1,9 +1,23 @@
 // Este va a ser el archivo de red del componente 'message', este va a gestionar todo lo que tiene que ver cuando se hace una peticion con la ruta '/message'
 
 const express = require('express');
+const multer = require('multer');
 const router = express.Router();
 const response = require('../../network/response')
 const { addMessage, getMessages, updateMessage, findMessage, deleteMessage } = require('./controller')
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, './public/images')
+    },
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}.jpg`);
+    }
+})
+
+const upload = multer({
+    storage: storage
+})
 
 router.get('/', (req, res) => { // Aqui no le estamos indicando una ruta en especifica ya que el archivo de 'router.js' en la capa de red del servidor, ya esta especificando que la ruta es: '/message' si se llegara a colocar de nuevo 'message' en este primer parametro la ruta quedaría asi: '/message/message'
     if (Object.keys(req.query).length === 0) {
@@ -16,14 +30,14 @@ router.get('/', (req, res) => { // Aqui no le estamos indicando una ruta en espe
     } else {
         findMessage(req.query)
         .then( ok => response.success(req, res, ok, 200))
-        .catch( ops => response.error(req, res, ops, 400))
+        .catch( ops => response.error(req, res, `Unexpected ${ops.valueType}. Expected ${ops.kind}`, 400))
     }
 
 })
 
-router.post('/', (req, res) => {
+router.post('/',upload.single('file'), (req, res) => {
 
-    addMessage(req.body.user, req.body.message)
+    addMessage(req.body.user, req.body.message, req.body.chat, req.file)
         .then( ok => response.success(req, res, ok, 201))
         .catch( ops => response.error(req, res, ops, 400));
     
