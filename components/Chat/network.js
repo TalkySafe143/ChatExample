@@ -13,7 +13,6 @@ router.get('/', (req, res) => {
 })
 
 router.get('/:_id', (req, res) => {
-    debugger;
     findChats(req.params._id)
             .then( ok => response.success(req, res, ok, 200))
             .catch( ops => {
