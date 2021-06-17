@@ -1,4 +1,6 @@
 const store = require('./store');
+const { socket } = require('../../socket');
+const config = require('../../config');
 
 const addMessage = (user, msg, chat, img) => {
     return new Promise((resolve, reject) => {
@@ -10,7 +12,7 @@ const addMessage = (user, msg, chat, img) => {
 
         let fileURL = '' ;
 
-        if (img) fileURL = `http://localhost:3001/app/images/${img.filename}`;
+        if (img) fileURL = `${config.host}:${config.port}${config.publicRoute}${config.imagesPath}/${img.filename}`;
 
         const fullMessage = {
             chat,
@@ -21,6 +23,8 @@ const addMessage = (user, msg, chat, img) => {
         }
         
         store.addMessageDB(fullMessage)
+
+        socket.io.emit('message', fullMessage)
 
         resolve(fullMessage)
     })

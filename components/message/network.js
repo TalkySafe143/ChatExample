@@ -1,6 +1,7 @@
 // Este va a ser el archivo de red del componente 'message', este va a gestionar todo lo que tiene que ver cuando se hace una peticion con la ruta '/message'
 
 const express = require('express');
+const config = require('../../config');
 const multer = require('multer');
 const router = express.Router();
 const response = require('../../network/response')
@@ -8,7 +9,7 @@ const { addMessage, getMessages, updateMessage, findMessage, deleteMessage } = r
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, './public/images')
+        cb(null, `./public${config.imagesPath}`)
     },
     filename: (req, file, cb) => {
         cb(null, `${Date.now()}.jpg`);
