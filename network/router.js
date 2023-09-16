@@ -1,7 +1,7 @@
 // Este va a ser el archivo encargado de hacer todas las rutas y gestionarla con los componentes
 
 const message = require('../components/message/network'); // Como vemos, estamos importando el router que hicimos en el archivo de red del componente de los mensajes (Es decir, la funcionalidad de mensajes)
-const user = require('../components/user/network');
+const user = require('../components/User/network');
 const chat = require('../components/Chat/network');
 
 exports.routes = server => { // Vamos a exportar la siguiente funcion, la cual toma como parametro el servidor de Express (Con TypeScript quizá podemos tiparlo mejor para que se entienda mas)
